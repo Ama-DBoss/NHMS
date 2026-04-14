@@ -1,0 +1,46 @@
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# IDE and Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Operating System files
+Thumbs.db
+.AppleDouble
+.LSOverride
+
+# Composer
+vendor/
+composer.lock
+
+# Log files
+*.log
+logs/
+
+# Temporary files
+tmp/
+temp/
+cache/
+
+# Database files
+*.sql
+!setup.sql
+*.db
+*.sqlite
+
+# Node modules (if using npm)
+node_modules/
+package-lock.json
+
+# Session files
+sessions/
+
+# Upload directories
+uploads/

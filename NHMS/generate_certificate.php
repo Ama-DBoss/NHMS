@@ -1,5 +1,4 @@
 <?php
-session_start();
 require_once 'includes/db_connect.php';
 require_once 'includes/functions.php';
 
@@ -10,13 +9,20 @@ if (!is_hospital()) {
 $hospital_id = $_SESSION['hospital_id'];
 $certificate_type = $_GET['type'] ?? '';
 
+// Validate certificate type
 if (!in_array($certificate_type, ['birth', 'death'])) {
     set_flash_message('danger', 'Invalid certificate type.');
     redirect('dashboard.php');
 }
 
+$errors = [];
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $errors = [];
+    // Verify CSRF token
+    $csrf_token = $_POST['csrf_token'] ?? '';
+    if (!verify_csrf_token($csrf_token)) {
+        $errors[] = 'Security token validation failed. Please try again.';
+    }
 
     if ($certificate_type === 'birth') {
         $child_name = sanitize_input($_POST['child_name']);
@@ -89,14 +95,15 @@ require_once 'includes/header.php';
     <?= display_flash_message() ?>
     <?php
     if (!empty($errors)) {
-        echo '<div class="alert alert-danger"><ul>';
+        echo '<div class="alert alert-danger" role="alert"><ul class="mb-0">';
         foreach ($errors as $error) {
-            echo "<li>$error</li>";
+            echo "<li>" . htmlspecialchars($error, ENT_QUOTES, 'UTF-8') . "</li>";
         }
         echo '</ul></div>';
     }
     ?>
-    <form action="generate_certificate.php?type=<?= $certificate_type ?>" method="post">
+    <form action="generate_certificate.php?type=<?= htmlspecialchars($certificate_type, ENT_QUOTES, 'UTF-8') ?>" method="post">
+        <?= csrf_token_field() ?>
         <?php if ($certificate_type === 'birth'): ?>
             <div class="mb-3">
                 <label for="child_name" class="form-label">Child's Name</label>

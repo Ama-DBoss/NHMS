@@ -1,4 +1,11 @@
 <?php
+// Set security headers
+header('X-Content-Type-Options: nosniff');
+header('X-Frame-Options: SAMEORIGIN');
+header('X-XSS-Protection: 1; mode=block');
+header('Referrer-Policy: strict-origin-when-cross-origin');
+header('Permissions-Policy: geolocation=(), microphone=(), camera=()');
+
 $page_title = $page_title ?? "National Birth & Death Management System";
 $page_description = $page_description ?? "Official platform for managing birth and death records in Nigeria";
 ?>
